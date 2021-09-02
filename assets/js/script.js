@@ -20,60 +20,70 @@ var questions = [
         choice4: 'color'
     },{
         type: 'CSS',
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        question: 'A container is given a display of flex, which is not a valid value for the justify-content property?',
+        choice1: 'center',
+        choice2: 'space-between',
+        choice3: 'flex-end',
+        choice4: 'flex-around'
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''  
+        type: 'JavaScript',
+        question: 'What is the syntax for a comment is JavaScript?',
+        choice1: '//, /**/',
+        choice2: '<!-- -->',
+        choice3: 'document.comment()',
+        choice4: 'var comment = '  
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        type: 'CSS',
+        question: 'How can we select this tag "<h2 id="header2" class="article-title">Title of Artitle</h2>"?',
+        choice1: '#TitleofArticle',
+        choice2: '.h2',
+        choice3: '.article-title',
+        choice4: 'header2'
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        type: 'JavaScript',
+        question: 'What is the value of "z" in the following code? \n var x = "3";\nvar y = "3";\n var z = x + y;',
+        choice1: 'undefined',
+        choice2: '9',
+        choice3: '6',
+        choice4: '33'
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        type: 'HTML',
+        question: 'Which element is an inline HTML element?',
+        choice1: '<div>',
+        choice2: '<form>',
+        choice3: '<img>',
+        choice4: '<nav>'
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        type: 'JavaScript',
+        question: 'Which is not a object in JavaScript?',
+        choice1: 'window',
+        choice2: 'for',
+        choice3: 'MATH',
+        choice4: 'document'
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        type: 'HTML',
+        question: 'Where should you link your external stylesheet in your HTML file?',
+        choice1: 'at the bottom of the <body> tag',
+        choice2: 'at the very top of the file',
+        choice3: 'at the top of the <body> tag',
+        choice4: 'at the bottom of the <head> tag'
     },{
-        question: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: ''
+        type: 'CSS',
+        question: 'How do you reference a variable in CSS?',
+        choice1: 'var(--variable-name)',
+        choice2: 'variable-name',
+        choice3: '.variable-name',
+        choice4: '#variable-name'
     }];
-// console.log(questions[0].answer);
+
+
 var startGame = function() {
     homepage.classList.add('no-display');
     quiz.classList.remove('no-display');
     // game logic
-    
+    for (var i=0;i<questions.length;i++) {
+        console.log(questions[i]);
+    }
 };
 
 startGameButton.addEventListener('click', startGame);
