@@ -1,6 +1,9 @@
 var startGameButton = document.querySelector('#startQuizGame');
 var homePage = document.querySelector('#homepage');
 var quiz = document.querySelector('#quiz');
+var questionEl = document.querySelector('#question-div');
+var choicesEl = document.querySelector('#choices-div');
+
 
 // questions array
 var questions = [
@@ -58,26 +61,18 @@ var questions = [
 
 var displayQuestions = function(question) {
     // create question div
-    var questionEl = document.createElement('div');
-    var h1El = document.createElement('h1');
-    h1El.textContent = question.question;
-    questionEl.appendChild(h1El);
-    quiz.appendChild(questionEl);
+    questionEl.querySelector('.question-title').textContent = question.question;
 
     // create answer list div
-    var answersEl = document.createElement('div');
-    var answerList = document.createElement('ul');
     for (var i=0;i<4;i++) {
         var listEl = document.createElement('li');
         var choice = question.choices[i];
         listEl.textContent = choice;
-        answerList.appendChild(listEl);
     }
-    answersEl.appendChild(answerList);
-    quiz.appendChild(answersEl);
 }
+
 var startGame = function() {
-    homepage.classList.add('no-display');
+    homePage.classList.add('no-display');
     quiz.classList.remove('no-display');
     // game logic
     for (var i=0;i<questions.length;i++) {

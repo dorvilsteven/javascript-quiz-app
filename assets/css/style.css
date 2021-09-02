@@ -12,6 +12,15 @@ a {
   color: magenta;
   text-decoration: none;
 }
+ul {
+  list-style: none;
+}
+li {
+  background-color: mediumpurple;
+  color: white;
+  padding: 0.5em;
+  width: 40%;
+}
 .no-display {
   display: none;
 }
