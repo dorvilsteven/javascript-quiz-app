@@ -5,19 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javascript Quiz Game</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
     <header>
-        <div id="highScores" class="highscores">View high scores</div>
-        <div id="timer" class="timer">Time: 0</div>
+        <div class="highscores">
+            <a href="#">View high scores</a>
+        </div>
+        <div class="timer">
+            <p id="timer-text" class="timer-text">Time: 0</p>
+        </div>
     </header>
     <main>
-        <div class="homepage">
+        <div id="homepage" class="homepage">
             <h1>Coding Quiz Challenge</h1>
             <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize you by ten seconds.</p>
             <button id="startQuizGame" type="button">Start Quiz</button>
         </div>
-        <div id="quiz" class="quiz-game"></div>
+        <div id="quiz" class="quiz-game no-display">Quiz Game</div>
     </main>
 
     <script src="./assets/js/script.js"></script>
