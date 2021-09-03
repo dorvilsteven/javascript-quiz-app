@@ -46,12 +46,12 @@ var questions = [
         type: 'HTML',
         question: 'Which element is an inline HTML element?',
         choices: ['<div>','<form>','<img>','<nav>'],
-        asnwer: 2
+        answer: 2
     },{
         type: 'JavaScript',
         question: 'Which is not a object in JavaScript?',
         choices: ['window','for','MATH','document'],
-        asnwer: 1
+        answer: 1
     },{
         type: 'HTML',
         question: 'Where should you link your external stylesheet in your HTML file?',
@@ -70,26 +70,30 @@ var startTimer = function() {
 
 // function takes in questions array
 var displayQuestions = function(questions, count) {
-    // displays the question  
-    questionTitle.textContent = questions[count].question;
-    // loops through each objects choices array
-    for (var i=0;i<questions[count].choices.length;i++) {
-        // display each choice inside of a li
-        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = questions[count].choices[i];
-    }
-    choiceList.addEventListener('click', function(event) {
-        var choice = event.target;
-        if (choice.matches(`.choice-list-item`)) {
-            var choiceNumber = choice.getAttribute('data-choice');
-            if (choiceNumber === questions[count].answer.toString()) {
-                console.log('correct');
-                score += 1;
-                displayQuestions(questions, count+1);
-            } else {
-                console.log('incorrect');
-            }
+    if (count < questions.length) {
+        // displays the question  
+        questionTitle.textContent = questions[count].question;
+        // loops through each objects choices array
+        for (var i=0;i<questions[count].choices.length;i++) {
+            // display each choice inside of a li
+            choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = questions[count].choices[i];
         }
-    });
+        choiceList.addEventListener('click', function(event) {
+            var choice = event.target;
+            if (choice.matches(`.choice-list-item`)) {
+                if (parseInt(choice.getAttribute('data-choice')) === questions[count].answer) {
+                    console.log('correct');
+                    score += 1;
+                    displayQuestions(questions, count+1);
+                } else {
+                    console.log('incorrect');
+                    displayQuestions(questions, count+1);
+                }
+            }
+        });
+    } else {
+        // display screen to show scores and input user name
+    }
 }
 
 var startGame = function() {
