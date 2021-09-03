@@ -2,8 +2,12 @@ var startGameButton = document.querySelector('#startQuizGame');
 var homePage = document.querySelector('#homepage');
 var quiz = document.querySelector('#quiz');
 var questionEl = document.querySelector('#question-div');
+var questionTitle = questionEl.querySelector('.question-title');
 var choicesEl = document.querySelector('#choices-div');
 var choiceList = choicesEl.querySelector('.choice-list');
+
+var score = 0;
+var time = 90;
  
 
 // questions array
@@ -60,25 +64,43 @@ var questions = [
         answer: 0
     }];
 
-var displayQuestions = function(question) {
-    // create question div
-    questionEl.querySelector('.question-title').textContent = question.question;
+var startTimer = function() {
+    
+}
 
-    // create answer list div
-    for (var i=0;i<4;i++) {
-        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = question.choices[i];
+// function takes in questions array
+var displayQuestions = function(questions, count) {
+    // displays the question  
+    questionTitle.textContent = questions[count].question;
+    // loops through each objects choices array
+    for (var i=0;i<questions[count].choices.length;i++) {
+        // display each choice inside of a li
+        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = questions[count].choices[i];
     }
-    // for (var i=0;i<questions.length;i++)
+    choiceList.addEventListener('click', function(event) {
+        var choice = event.target;
+        if (choice.matches(`.choice-list-item`)) {
+            var choiceNumber = choice.getAttribute('data-choice');
+            if (choiceNumber === questions[count].answer.toString()) {
+                console.log('correct');
+                score += 1;
+                displayQuestions(questions, count+1);
+            } else {
+                console.log('incorrect');
+            }
+        }
+    });
 }
 
 var startGame = function() {
     homePage.classList.add('no-display');
     quiz.classList.remove('no-display');
     // game logic
-    // displayQuestions(questions);
-    for (var i=0;i<questions.length;i++) {
-        displayQuestions(questions[i]);
-    }
+    // startTimer();
+    // display each question
+    displayQuestions(questions, 0);
+
+
 };
 
 startGameButton.addEventListener('click', startGame);
