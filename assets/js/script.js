@@ -70,7 +70,6 @@ var startTimer = function() {
 
 // function takes in questions array
 var displayQuestions = function(questions, count) {
-    if (count < questions.length) {
         // displays the question  
         questionTitle.textContent = questions[count].question;
         // loops through each objects choices array
@@ -91,9 +90,6 @@ var displayQuestions = function(questions, count) {
                 }
             }
         });
-    } else {
-        // display screen to show scores and input user name
-    }
 }
 
 var startGame = function() {
