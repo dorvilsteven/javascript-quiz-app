@@ -3,7 +3,8 @@ var homePage = document.querySelector('#homepage');
 var quiz = document.querySelector('#quiz');
 var questionEl = document.querySelector('#question-div');
 var choicesEl = document.querySelector('#choices-div');
-
+var choiceList = choicesEl.querySelector('.choice-list');
+ 
 
 // questions array
 var questions = [
@@ -65,16 +66,16 @@ var displayQuestions = function(question) {
 
     // create answer list div
     for (var i=0;i<4;i++) {
-        var listEl = document.createElement('li');
-        var choice = question.choices[i];
-        listEl.textContent = choice;
+        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = question.choices[i];
     }
+    // for (var i=0;i<questions.length;i++)
 }
 
 var startGame = function() {
     homePage.classList.add('no-display');
     quiz.classList.remove('no-display');
     // game logic
+    // displayQuestions(questions);
     for (var i=0;i<questions.length;i++) {
         displayQuestions(questions[i]);
     }
