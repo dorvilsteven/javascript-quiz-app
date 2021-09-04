@@ -64,20 +64,39 @@ var questions = [
         answer: 0
 }];
 
-var endGame = function() {
+var addToLocalStorage = function(initials, score) {
+    // event.preventDefault();
+     var list = JSON.parse(localStorage.getItem('scores')) || [];
+     list.push({
+         initials: initials,
+         score: score
+     });
+     localStorage.setItem('scores', JSON.stringify(list));
+}
+
+var endGame = function(score) {
     quiz.classList.add('no-display');
+    var initials;
+    result.innerHTML = `<h4>Thanks for playing!</h4>
+                        <h6>Your final Score is <span>${score}</span></h6>
+                        <form>
+                        <input id="initialValue" type="text" placeholder="Enter Initials"/>
+                        <button type="Submit">Submit</button>
+                        </form>`;
+    initials = document.querySelector('#initialValue').value;
+    result.addEventListener('submit', addToLocalStorage(initials, score));
 }
 
 var startTimer = function() {
-    var time = 15;
+    var time = 25;
     var timeCountdown = setInterval(function() {
         if (time > 0) {
             timer.textContent = `Time: ${time}`;
             time--;
         } else {
             timer.textContent = `Time: ${time}`;
+            // endGame();
             clearInterval(timeCountdown);
-            endGame();
         }
     }, 1000);
 }
@@ -99,7 +118,7 @@ var startGame = function(score, count) {
     if (count < questions.length) {
         displayQuestions(questions, count);
     } else {
-        endGame();
+        endGame(score);
     }
     choiceList.addEventListener('click', function(event) {
         var choice = event.target;
@@ -108,8 +127,10 @@ var startGame = function(score, count) {
             var choiceNumber = parseInt(choice.getAttribute('data-choice'));
             if (choiceNumber === questions[count].answer) {
                 score++;
+                result.classList.add('border');
                 result.textContent = `Correct! Score: ${score}`;
             } else {
+                result.classList.add('border');
                 result.textContent = `Incorrect!`;
             }
         }
@@ -121,5 +142,5 @@ startGameButton.addEventListener('click', function() {
     homePage.classList.add('no-display');
     quiz.classList.remove('no-display');
     startTimer();
-    startGame(score, count)
+    startGame(score, count);
 });

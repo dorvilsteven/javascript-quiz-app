@@ -52,5 +52,7 @@ main .start-quiz {
 .result {
   font-size: 2em;
   color: gray;
-  text-decoration: underline;
+}
+.border {
+  border-top: 2px gray solid;
 }
