@@ -5,10 +5,10 @@ var questionEl = document.querySelector('#question-div');
 var questionTitle = questionEl.querySelector('.question-title');
 var choicesEl = document.querySelector('#choices-div');
 var choiceList = choicesEl.querySelector('.choice-list');
-
+var timer = document.querySelector('#timerText');
+var result = document.querySelector('#choiceResult');
 var score = 0;
-var time = 90;
- 
+var count = 0;
 
 // questions array
 var questions = [
@@ -39,7 +39,7 @@ var questions = [
         answer: 2
     },{
         type: 'JavaScript',
-        question: 'What is the value of "z" in the following code? \n var x = "3";\nvar y = "3";\n var z = x + y;',
+        question: 'What is the value of "z" in the following code? var x = "3"; var y = "3"; var z = x + y;',
         choices: ['undefined','9','6','33'],
         answer: 3
     },{
@@ -62,45 +62,64 @@ var questions = [
         question: 'How do you reference a variable in CSS?',
         choices: ['var(--variable-name)','variable-name','.variable-name','#variable-name'],
         answer: 0
-    }];
+}];
+
+var endGame = function() {
+    quiz.classList.add('no-display');
+}
 
 var startTimer = function() {
-    
+    var time = 15;
+    var timeCountdown = setInterval(function() {
+        if (time > 0) {
+            timer.textContent = `Time: ${time}`;
+            time--;
+        } else {
+            timer.textContent = `Time: ${time}`;
+            clearInterval(timeCountdown);
+            endGame();
+        }
+    }, 1000);
 }
 
 // function takes in questions array
 var displayQuestions = function(questions, count) {
-        // displays the question  
-        questionTitle.textContent = questions[count].question;
-        // loops through each objects choices array
-        for (var i=0;i<questions[count].choices.length;i++) {
-            // display each choice inside of a li
-            choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = questions[count].choices[i];
-        }
-        choiceList.addEventListener('click', function(event) {
-            var choice = event.target;
-            if (choice.matches(`.choice-list-item`)) {
-                if (parseInt(choice.getAttribute('data-choice')) === questions[count].answer) {
-                    console.log('correct');
-                    score += 1;
-                    displayQuestions(questions, count+1);
-                } else {
-                    console.log('incorrect');
-                    displayQuestions(questions, count+1);
-                }
-            }
-        });
+    // displays the question  
+    questionTitle.textContent = questions[count].question;
+    // loops through each objects choices array
+    for (var i=0;i<questions[count].choices.length;i++) {
+        // display each choice inside of a li
+        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = questions[count].choices[i];
+    }
 }
 
-var startGame = function() {
-    homePage.classList.add('no-display');
-    quiz.classList.remove('no-display');
+var startGame = function(score, count) {
     // game logic
-    // startTimer();
-    // display each question
-    displayQuestions(questions, 0);
-
-
+    // // display each question
+    if (count < questions.length) {
+        displayQuestions(questions, count);
+    } else {
+        endGame();
+    }
+    choiceList.addEventListener('click', function(event) {
+        var choice = event.target;
+        // console.log(choice);
+        if (choice.matches(`.choice-list-item`)) {
+            var choiceNumber = parseInt(choice.getAttribute('data-choice'));
+            if (choiceNumber === questions[count].answer) {
+                score++;
+                result.textContent = `Correct! Score: ${score}`;
+            } else {
+                result.textContent = `Incorrect!`;
+            }
+        }
+        startGame(score, count+1);
+    });
 };
 
-startGameButton.addEventListener('click', startGame);
+startGameButton.addEventListener('click', function() {
+    homePage.classList.add('no-display');
+    quiz.classList.remove('no-display');
+    startTimer();
+    startGame(score, count)
+});
