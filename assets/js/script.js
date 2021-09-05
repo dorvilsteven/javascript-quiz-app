@@ -145,7 +145,7 @@ var startGame = function(score, count, time) {
                 result.classList.add('border');
                 result.textContent = `Correct! Score: ${score}`;
             } else {
-                time -= PENALTY;
+                time -= (PENALTY - 1);
                 result.classList.add('border');
                 result.textContent = `Incorrect!`;
             }
@@ -161,6 +161,6 @@ highscoresLink.addEventListener('click', displayHighScores);
 startGameButton.addEventListener('click', function() {
     homePage.classList.add('no-display');
     quiz.classList.remove('no-display');
-    time = 10;
+    time = 60;
     startGame(score, count, time);
 });
