@@ -27,6 +27,7 @@ var buttonClear = document.querySelector('#button-clear');
 var timer = document.querySelector('#timerText');
 var scoreDisplay = document.querySelector('#score');
 var scoresList = document.querySelector('#scores-list');
+var scoreInput = document.getElementById('#initialValue');
 
 
 var score = 0;
@@ -119,6 +120,8 @@ var endGame = function(score) {
     result.classList.add('no-display');
     endResult.classList.remove('no-display');
     scoreSubmit.onclick = function() {
+        var initials = scoreInput;
+        console.log(initials);
         addToLocalStorage(score);
     }
 };
@@ -135,11 +138,10 @@ var displayQuestions = function(questions, count) {
 };
 var startGame = function(score, count, time) {
     // game logic
-
     // start count down 
     var timeCountdown = setInterval(function() {
         // if time runs out or we run out of questions
-        if (time < 1 || count >= questions.length) {
+        if (time < 1) {
             timer.textContent = `Time: Game over`;
             scoreDisplay.textContent = score;
             endGame(score);
@@ -149,24 +151,31 @@ var startGame = function(score, count, time) {
             time--;
         }
     }, 1000);
-    displayQuestions(questions, count);
-    choiceList.onclick = function(event) {
-        var choice = event.target;
-        if (choice.matches(`.choice-list-item`)) {
-            var choiceNumber = parseInt(choice.getAttribute('data-choice'));
-            if (choiceNumber === questions[count].answer) {
-                score++;
-                result.classList.add('border');
-                result.textContent = `Correct! Score: ${score}`;
-            } else {
-                time -= (PENALTY - 1);
-                result.classList.add('border');
-                result.textContent = `Incorrect!`;
-            }
-        }
+    if (count >= questions.length) {
+        timer.textContent = `Time: Game over`;
+        scoreDisplay.textContent = score;
+        endGame(score);
         clearInterval(timeCountdown);
-        startGame(score, count+1, time);
-    };
+    } else {
+        displayQuestions(questions, count);
+        choiceList.onclick = function(event) {
+            var choice = event.target;
+            if (choice.matches(`.choice-list-item`)) {
+                var choiceNumber = parseInt(choice.getAttribute('data-choice'));
+                if (choiceNumber === questions[count].answer) {
+                    score++;
+                    result.classList.add('border');
+                    result.textContent = `Correct! Score: ${score}`;
+                } else {
+                    time -= (PENALTY);
+                    result.classList.add('border');
+                    result.textContent = `Incorrect!`;
+                }
+            }
+            clearInterval(timeCountdown);
+            startGame(score, count+1, time);
+        };
+    }
 };
 
 // go back button event listener 
