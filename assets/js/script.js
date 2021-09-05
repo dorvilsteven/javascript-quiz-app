@@ -10,9 +10,12 @@ var choiceItem = choiceList.querySelectorAll('.choice-list-item');
 var timer = document.querySelector('#timerText');
 var result = document.querySelector('#choiceResult');
 var highscoresLink = document.querySelector('#highscores-link');
+var highscoresList = document.querySelector('#scores-list');
+var main = document.querySelector('#main-container');
+var highScores = document.querySelector('#high-scores');
 var score = 0;
 var count = 0;
-var time = 60;
+var time = 10;
 
 // questions array
 var questions = [
@@ -68,6 +71,20 @@ var questions = [
         answer: 0
 }];
 
+var displayHighScores = function() {
+    main.classList.add('no-display');
+    highScores.classList.remove('no-display');
+    var list = JSON.parse(localStorage.getItem('scores')) || [];
+
+    for (var i=0;i<list.length;i++) {
+        var listItem = document.createElement('li');
+        listItem.classList.add('highscores-list-item');
+        listItem.textContent = `${i}. ${list[i].initials} - ${list[i].score}`;
+        highscoresList.appendChild(listItem);
+    }
+
+};
+
 var endGame = function(score) {
     quiz.classList.add('no-display');
     var initials;
@@ -82,7 +99,7 @@ var endGame = function(score) {
                                 <button type="Submit">Submit</button>
                             </form>
                         </div>`;
-    var form = document.querySelector('#resultForm');
+    var form = result.querySelector('#resultForm');
     initials = form.querySelector('#initialValue').value;
 
     console.log(initials);
@@ -93,7 +110,6 @@ var endGame = function(score) {
             initials: initials,
             score: score
         });
-        console.log(initials, list);
         localStorage.setItem('scores', JSON.stringify(list));
     });
 };
@@ -113,9 +129,8 @@ var startGame = function(score, count) {
     if (count < questions.length && time > 0) {
         displayQuestions(questions, count);
         choiceList.addEventListener('click', function(event) {
-            // event.preventDefault();
             var choice = event.target;
-            console.log(choice);
+            // console.log(choice);
             if (choice.matches(`.choice-list-item`)) {
                 var choiceNumber = parseInt(choice.getAttribute('data-choice'));
                 if (choiceNumber === questions[count].answer) {
@@ -133,10 +148,6 @@ var startGame = function(score, count) {
     } else {
         endGame(score);
     }
-};
-
-var displayHighScores = function() {
-    
 };
 
 highscoresLink.addEventListener('click', displayHighScores);

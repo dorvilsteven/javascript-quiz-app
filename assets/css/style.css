@@ -2,6 +2,7 @@
 
 :root {
   --color-magenta: rgba(255, 0, 255, 0.794);
+  --color-light-magenta: rgba(212, 124, 212, 0.726);
 }
 * {
   box-sizing: border-box;
@@ -29,7 +30,7 @@ li {
   margin-top: 0.5em;
 }
 .no-display {
-  display: none;
+  display: none !important;
 }
 header {
   display: flex;
@@ -55,4 +56,14 @@ main {
 }
 .border {
   border-top: 2px gray solid;
+}
+.highScores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+}
+.highscores-list-item {
+  background-color: var(--color-light-magenta);
+  width: auto;
 }
