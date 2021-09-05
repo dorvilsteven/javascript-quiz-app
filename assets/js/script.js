@@ -19,14 +19,14 @@ var choiceItem = choiceList.querySelectorAll('.choice-list-item');
 // links and buttons
 var startGameButton = document.querySelector('#startQuizGame');
 var highscoresLink = document.querySelector('#highscores-link');
-var scoresList = document.querySelector('#scores-list');
 var scoreSubmit = document.getElementById('score-submit');
 var buttonReturn = document.querySelector('#button-return');
 var buttonClear = document.querySelector('#button-clear');
 
-// text that dsplays time and score
+// text that displays time and score and highscores
 var timer = document.querySelector('#timerText');
 var scoreDisplay = document.querySelector('#score');
+var scoresList = document.querySelector('#scores-list');
 
 
 var score = 0;
@@ -94,8 +94,7 @@ var displayHighScores = function() {
         for (var i=0;i<list.length;i++) {
             var listItem = document.createElement('li');
             listItem.classList.add('highscores-list-item');
-            listItem.setAttribute('id', i);
-            listItem.textContent = `${i}. ${list[i].initials} - ${list[i].score}`;
+            listItem.textContent = `${i+1}. ${list[i].initials} - ${list[i].score}`;
             scoresList.appendChild(listItem);
         }
     }
@@ -103,7 +102,7 @@ var displayHighScores = function() {
 
 var clearHighScores = function() {
     localStorage.removeItem('scores');
-    
+    scoresList.innerHTML = '';
 };
 
 var addToLocalStorage = function(score) {
@@ -131,18 +130,20 @@ var displayQuestions = function(questions, count) {
     // loops through each objects choices array
     for (var i=0;i<questions[count].choices.length;i++) {
         // display each choice inside of a li
-        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = `${i}. ${questions[count].choices[i]}`;
+        choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = `${i+1}. ${questions[count].choices[i]}`;
     }
 };
 var startGame = function(score, count, time) {
     // game logic
+
+    // start count down 
     var timeCountdown = setInterval(function() {
+        // if time runs out or we run out of questions
         if (time < 1 || count >= questions.length) {
-            // debugger;
             timer.textContent = `Time: Game over`;
             scoreDisplay.textContent = score;
-            clearInterval(timeCountdown);
             endGame(score);
+            clearInterval(timeCountdown);
         } else {
             timer.textContent = `Time: ${time}`;
             time--;
@@ -168,13 +169,22 @@ var startGame = function(score, count, time) {
     };
 };
 
-
+// go back button event listener 
 buttonReturn.addEventListener('click', goHome);
+// clear highscores event listener
 buttonClear.addEventListener('click', clearHighScores)
+// visit high scores section
 highscoresLink.addEventListener('click', displayHighScores);
+// main start game button event listener
 startGameButton.addEventListener('click', function() {
+    // hide homepage
     homePage.classList.add('no-display');
+    // remove display none styling from quiz game and result
     quiz.classList.remove('no-display');
     result.classList.remove('no-display');
+    // run game logic
+    // score, starts at 0, and tracks user score
+    // count, starts at 0, and tracks question count
+    // time, keeps track of how much time is left
     startGame(score, count, time);
 });
