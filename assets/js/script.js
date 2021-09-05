@@ -9,13 +9,17 @@ var choiceList = choicesEl.querySelector('.choice-list');
 var choiceItem = choiceList.querySelectorAll('.choice-list-item');
 var timer = document.querySelector('#timerText');
 var result = document.querySelector('#choiceResult');
+var endResult = document.querySelector('#end-result');
 var highscoresLink = document.querySelector('#highscores-link');
 var highscoresList = document.querySelector('#scores-list');
 var main = document.querySelector('#main-container');
 var highScores = document.querySelector('#high-scores');
+var scoreDisplay = document.querySelector('#score');
+var scoreSubmit = document.getElementById('score-submit');
+var buttonReturn = document.querySelector('#button-return');
 var score = 0;
 var count = 0;
-var time = 10;
+var time;
 
 // questions array
 var questions = [
@@ -71,6 +75,13 @@ var questions = [
         answer: 0
 }];
 
+var goHome = function() {
+  highScores.classList.add('no-display');
+  endResult.classList.add('no-display');
+  main.classList.remove('no-display');
+  homePage.classList.remove('no-display');  
+};
+
 var displayHighScores = function() {
     main.classList.add('no-display');
     highScores.classList.remove('no-display');
@@ -82,36 +93,22 @@ var displayHighScores = function() {
         listItem.textContent = `${i}. ${list[i].initials} - ${list[i].score}`;
         highscoresList.appendChild(listItem);
     }
-
 };
-
+var addToLocalStorage = function(score) {
+    var list = JSON.parse(localStorage.getItem('scores')) || [];
+    list.push({
+            initials: 'name',
+            score: score
+    });
+    localStorage.setItem('scores', JSON.stringify(list));
+};
 var endGame = function(score) {
     quiz.classList.add('no-display');
-    var initials;
-    result.innerHTML = `<div>
-                            <h4>Thanks for playing!</h4>
-                            <h6>Your final Score is <span>${score}</span></h6>
-                        </div>
-                        <div>
-                            <form id='resultForm'>
-                                <label for="initials">Enter Your Initials</label>
-                                <input id="initialValue" type="text" name="initials" />
-                                <button type="Submit">Submit</button>
-                            </form>
-                        </div>`;
-    var form = result.querySelector('#resultForm');
-    initials = form.querySelector('#initialValue').value;
-
-    console.log(initials);
-    result.addEventListener('submit', function(event) {
-        event.preventDefault();
-        var list = JSON.parse(localStorage.getItem('scores')) || [];
-        list.push({
-            initials: initials,
-            score: score
-        });
-        localStorage.setItem('scores', JSON.stringify(list));
-    });
+    result.classList.add('no-display');
+    endResult.classList.remove('no-display');
+    scoreSubmit.onclick = function() {
+        addToLocalStorage(score);
+    }
 };
 
 // function takes in questions array
@@ -124,45 +121,46 @@ var displayQuestions = function(questions, count) {
         choiceList.querySelector(`.choice-list-item[data-choice='${i}']`).textContent = questions[count].choices[i];
     }
 };
-var startGame = function(score, count) {
+var startGame = function(score, count, time) {
     // game logic
-    if (count < questions.length && time > 0) {
-        displayQuestions(questions, count);
-        choiceList.addEventListener('click', function(event) {
-            var choice = event.target;
-            // console.log(choice);
-            if (choice.matches(`.choice-list-item`)) {
-                var choiceNumber = parseInt(choice.getAttribute('data-choice'));
-                if (choiceNumber === questions[count].answer) {
-                    score++;
-                    result.classList.add('border');
-                    result.textContent = `Correct! Score: ${score}`;
-                } else {
-                    // time -= PENALTY;
-                    result.classList.add('border');
-                    result.textContent = `Incorrect!`;
-                }
+    var timeCountdown = setInterval(function() {
+        if (time < 1 || count >= questions.length) {
+            // debugger;
+            timer.textContent = `Time: Game over`;
+            scoreDisplay.textContent = score;
+            clearInterval(timeCountdown);
+            endGame(score);
+        } else {
+            timer.textContent = `Time: ${time}`;
+            time--;
+        }
+    }, 1000);
+    displayQuestions(questions, count);
+    choiceList.onclick = function(event) {
+        var choice = event.target;
+        if (choice.matches(`.choice-list-item`)) {
+            var choiceNumber = parseInt(choice.getAttribute('data-choice'));
+            if (choiceNumber === questions[count].answer) {
+                score++;
+                result.classList.add('border');
+                result.textContent = `Correct! Score: ${score}`;
+            } else {
+                time -= PENALTY;
+                result.classList.add('border');
+                result.textContent = `Incorrect!`;
             }
-            startGame(score, count+1);
-        });
-    } else {
-        endGame(score);
-    }
+        }
+        clearInterval(timeCountdown);
+        startGame(score, count+1, time);
+    };
 };
 
+
+buttonReturn.addEventListener('click', goHome);
 highscoresLink.addEventListener('click', displayHighScores);
 startGameButton.addEventListener('click', function() {
     homePage.classList.add('no-display');
     quiz.classList.remove('no-display');
-    startGame(score, count);
-    var timeCountdown = setInterval(function() {
-        if (time > 0) {
-            timer.textContent = `Time: ${time}`;
-            time--;
-        } else {
-            timer.textContent = `Time: ${time}`;
-            endGame(score);
-            clearInterval(timeCountdown);
-        }
-    }, 1000);
+    time = 10;
+    startGame(score, count, time);
 });
