@@ -8,38 +8,52 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <!-- header section -->
-    <header>
-        <div class="highscores">
-            <a href="#">View high scores</a>
-        </div>
-        <div class="timer">
-            <p id="timerText" class="timer-text">Time: 0</p>
-        </div>
-    </header>
-    <!-- main section -->
-    <main>
-        <div id="homepage" class="homepage">
-            <h1>Coding Quiz Challenge</h1>
-            <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize you by ten seconds.</p>
-            <button id="startQuizGame" class="start-quiz" type="button">Start Quiz</button>
-        </div>
-        <div id="quiz" class="quiz-game no-display">
-            <div id="question-div">
-                <h3 class="question-title"></h3>
+    <div id="main-container" class="container">
+        <!-- header section -->
+        <header>
+            <div class="highscores">
+                <a id="highscores-link" href="#">View high scores</a>
             </div>
-            <div id="choices-div">
-                <ul class="choice-list">
-                    <li class="choice-list-item" data-choice="0"></li>
-                    <li class="choice-list-item" data-choice="1"></li>
-                    <li class="choice-list-item" data-choice="2"></li>
-                    <li class="choice-list-item" data-choice="3"></li>
-                </ul>
+            <div class="timer">
+                <p id="timerText" class="timer-text">Time: 0</p>
             </div>
+        </header>
+        <!-- main section -->
+        <main>
+            <div id="homepage" class="homepage">
+                <h1>Coding Quiz Challenge</h1>
+                <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize you by ten seconds.</p>
+                <button id="startQuizGame" class="button" type="button">Start Quiz</button>
+            </div>
+            <div id="quiz" class="quiz-game no-display">
+                <div id="question-div">
+                    <h3 class="question-title"></h3>
+                </div>
+                <div id="choices-div">
+                    <ul class="choice-list">
+                        <li class="choice-list-item" data-choice="0"></li>
+                        <li class="choice-list-item" data-choice="1"></li>
+                        <li class="choice-list-item" data-choice="2"></li>
+                        <li class="choice-list-item" data-choice="3"></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="choiceResult" class="result"></div>
+        </main>
+    </div>
+    <div id="high-scores" class="highScores">
+        <div class="title">
+            <h2>High Scores</h2>
         </div>
-        <div id="choiceResult" class="result"></div>
-    </main>
-
+        <div class="actions">
+            <button type="button" class="button">
+                Go Back
+            </button>
+            <button type="button" class="button">
+                Clear High Scores
+            </button>
+        </div>
+    </div>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>

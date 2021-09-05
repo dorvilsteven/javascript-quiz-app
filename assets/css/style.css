@@ -42,7 +42,7 @@ main {
   font-size: 1.6em;
   padding-top: 1.7em;
 }
-main .start-quiz {
+.button {
   padding: 1.2em 2em;
   color: white;
   background-color: var(--color-magenta);
