@@ -19,9 +19,11 @@ var choiceItem = choiceList.querySelectorAll('.choice-list-item');
 // links and buttons
 var startGameButton = document.querySelector('#startQuizGame');
 var highscoresLink = document.querySelector('#highscores-link');
-var scoreSubmit = document.getElementById('score-submit');
 var buttonReturn = document.querySelector('#button-return');
 var buttonClear = document.querySelector('#button-clear');
+
+var formEl = document.getElementById('resultForm');
+var scoreSubmit = document.getElementById('score-submit');
 
 // text that displays time and score and highscores
 var timer = document.querySelector('#timerText');
@@ -106,10 +108,10 @@ var clearHighScores = function() {
     scoresList.innerHTML = '';
 };
 
-var addToLocalStorage = function(score) {
+var addToLocalStorage = function(initials, score) {
     var list = JSON.parse(localStorage.getItem('scores')) || [];
     list.push({
-            initials: 'name',
+            initials: initials,
             score: score
     });
     localStorage.setItem('scores', JSON.stringify(list));
@@ -119,10 +121,11 @@ var endGame = function(score) {
     quiz.classList.add('no-display');
     result.classList.add('no-display');
     endResult.classList.remove('no-display');
-    scoreSubmit.onclick = function() {
-        var initials = scoreInput;
+    formEl.onsubmit = function(event) {
+        event.preventDefault();
+        var initials = document.querySelector('input[name="initials"]').value;
         console.log(initials);
-        addToLocalStorage(score);
+        addToLocalStorage(initials, score);
     }
 };
 
