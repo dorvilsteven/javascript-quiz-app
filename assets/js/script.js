@@ -1,5 +1,8 @@
 // time penalty
 var PENALTY = 10;
+var score = 0;
+var count = 0;
+var time = 60;
 
 // main area divs, accessed by id 
 var main = document.querySelector('#main-container');
@@ -22,6 +25,7 @@ var highscoresLink = document.querySelector('#highscores-link');
 var buttonReturn = document.querySelector('#button-return');
 var buttonClear = document.querySelector('#button-clear');
 
+// form 
 var formEl = document.getElementById('resultForm');
 var scoreSubmit = document.getElementById('score-submit');
 
@@ -30,11 +34,6 @@ var timer = document.querySelector('#timerText');
 var scoreDisplay = document.querySelector('#score');
 var scoresList = document.querySelector('#scores-list');
 var scoreInput = document.getElementById('#initialValue');
-
-
-var score = 0;
-var count = 0;
-var time = 60;
 
 // questions array
 var questions = [
@@ -81,50 +80,78 @@ var questions = [
 }];
 
 var goHome = function() {
+  // hide 
   highScores.classList.add('no-display');
   endResult.classList.add('no-display');
+  // show
   main.classList.remove('no-display');
   homePage.classList.remove('no-display');  
 };
 
 var displayHighScores = function() {
+    // hide
     main.classList.add('no-display');
+    // show
     highScores.classList.remove('no-display');
     
+    // list is either scores from local storage or empty array
     var list = JSON.parse(localStorage.getItem('scores')) || [];
     
+    // if the scores list ul has no children, then diplay the list from local storage, if it does have children, then there is nothing to display it is already there
     if (scoresList.childElementCount === 0) {
         for (var i=0;i<list.length;i++) {
+            // for each element in list
+            // create li
             var listItem = document.createElement('li');
+            // add class
             listItem.classList.add('highscores-list-item');
+            // add text content 
             listItem.textContent = `${i+1}. ${list[i].initials} - ${list[i].score}`;
+            // append to ul 
             scoresList.appendChild(listItem);
         }
     }
 };
 
+// function to clear the highscores
 var clearHighScores = function() {
+    // clear localStorage 
     localStorage.removeItem('scores');
+    // clear the list, remove all li elements 
     scoresList.innerHTML = '';
 };
 
+// function to add new score to local storage, accepts initial and score
 var addToLocalStorage = function(initials, score) {
+    // creates new empty array, if scores doesnt exist in local storage
     var list = JSON.parse(localStorage.getItem('scores')) || [];
+    // push the new score to the array
     list.push({
             initials: initials,
             score: score
     });
+    // update local storage with the updated array 
     localStorage.setItem('scores', JSON.stringify(list));
+    // go to highscores screen 
     displayHighScores();
 };
+// end game function accepts score parameter
 var endGame = function(score) {
+    // hide certain displays
     quiz.classList.add('no-display');
     result.classList.add('no-display');
+    // show the endResult display
     endResult.classList.remove('no-display');
+    // on the form submit, hoist initials and score to be updated to local storage
     formEl.onsubmit = function(event) {
         event.preventDefault();
         var initials = document.querySelector('input[name="initials"]').value;
-        console.log(initials);
+        // check if input value is empty strings
+        if (!initials) {
+            alert("Please Enter Your Initials!");
+            return false;
+        }
+        // add data to local storage
         addToLocalStorage(initials, score);
     }
 };
@@ -143,38 +170,49 @@ var startGame = function(score, count, time) {
     // game logic
     // start count down 
     var timeCountdown = setInterval(function() {
-        // if time runs out or we run out of questions
+        // if time runs out
         if (time < 1) {
+            // leave the startGame func, and clear the timer
             timer.textContent = `Time: Game over`;
             scoreDisplay.textContent = score;
             endGame(score);
             clearInterval(timeCountdown);
         } else {
-            timer.textContent = `Time: ${time}`;
+            // decrease the timer
             time--;
+            timer.textContent = `Time: ${time}`;
         }
-    }, 1000);
+    }, 1000); // every second
+    // if we run out of questions
     if (count >= questions.length) {
+        // leave the startGame func, and clear the timer
         timer.textContent = `Time: Game over`;
         scoreDisplay.textContent = score;
         endGame(score);
         clearInterval(timeCountdown);
     } else {
+        // if there are still more questions
         displayQuestions(questions, count);
+        // if a choice is clicked then run the function
         choiceList.onclick = function(event) {
             var choice = event.target;
+            // when a choice is made
             if (choice.matches(`.choice-list-item`)) {
                 var choiceNumber = parseInt(choice.getAttribute('data-choice'));
+                // check the choice to see if it is equal to the answer
                 if (choiceNumber === questions[count].answer) {
+                    // if it is correct, update score and update user on the screen
                     score++;
                     result.classList.add('border');
                     result.textContent = `Correct! Score: ${score}`;
                 } else {
+                    // if it is incorrect, update time with penalty and tell the user on the screen
                     time -= (PENALTY);
                     result.classList.add('border');
                     result.textContent = `Incorrect!`;
                 }
             }
+            // clear timer, recall startGame with updated values
             clearInterval(timeCountdown);
             startGame(score, count+1, time);
         };
